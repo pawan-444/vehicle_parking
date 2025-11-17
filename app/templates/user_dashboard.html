@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Dashboard - Vehicle Parking</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2d9d5a04c.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #e0f7fa, #e1f5fe);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      background-color: #343a40;
+    }
+
+    .navbar-brand {
+      color: white !important;
+    }
+
+    .dashboard-container {
+      padding: 40px 20px;
+      flex: 1;
+    }
+
+    .dashboard-card {
+      background-color: #fff;
+      border: 1px solid #e5eaf1;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      transition: 0.3s;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .dashboard-card h5 {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #2e3a59;
+    }
+
+    .dashboard-card p {
+      font-size: 0.92rem;
+      color: #6b7280;
+    }
+
+    .spot-box {
+      background-color: #f0f4ff;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .btn-primary {
+      background-color: #1e88e5;
+      border: none;
+      font-weight: 500;
+      border-radius: 8px;
+    }
+
+    .btn-primary:hover {
+      background-color: #1565c0;
+    }
+
+    .footer {
+      padding: 16px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #888;
+      background-color: #fff;
+      border-top: 1px solid #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">🚗 Vehicle Parking</a>
+      <a href="/logout" class="btn btn-sm btn-outline-primary">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container dashboard-container">
+    <h2 class="mb-4 text-center text-primary fw-semibold">Welcome, {{ current_user.username }} 👋</h2>
+    <div class="row g-4">
+      {% for item in lots %}
+      <div class="col-md-6 col-lg-4">
+        <div class="dashboard-card">
+          <h5>{{ item.lot.name }} ({{ item.lot.pincode }})</h5>
+          <p>{{ item.lot.address }}</p>
+          <p><strong>₹{{ item.lot.price_per_hour }}/hr</strong></p>
+          <p>Total Spots: <strong>{{ item.total_spots }}</strong></p>
+          <p>Occupied: <strong>{{ item.booked_spots }}</strong></p>
+          <p>Your Bookings: <strong>{{ item.user_reservations }}</strong></p>
+
+          <div class="progress mb-3" style="height: 6px;">
+            <div class="progress-bar" role="progressbar" style="width: {{ (item.booked_spots / item.total_spots * 100) if item.total_spots > 0 else 0 }}%;" aria-valuenow="{{ item.booked_spots }}" aria-valuemin="0" aria-valuemax="{{ item.total_spots }}"></div>
+          </div>
+
+          {% if item.user_booked_spots %}
+          <div class="spot-box">
+            <p><strong>Your Spots:</strong></p>
+            {% for spot in item.user_booked_spots %}
+            <form action="/release/{{ spot.id }}" method="POST" class="d-flex align-items-center justify-content-between mb-1">
+              <span>Spot ID: {{ spot.id }}</span>
+              <button type="submit" class="btn btn-sm btn-danger">Release</button>
+            </form>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <a href="{{ url_for('main.book_spot', lot_id=item.lot.id) }}" class="btn btn-primary mt-3 w-100">
+            <i class="fas fa-parking me-2"></i> Book a Spot
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <footer class="footer">
+    &copy; 2025 Vehicle Parking App. Designed with ❤️
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

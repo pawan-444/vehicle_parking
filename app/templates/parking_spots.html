@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parking Spot Viewer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .spot {
+      width: 80px;
+      height: 80px;
+      margin: 10px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .available {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .occupied {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .reserved {
+      background-color: #cce5ff;
+      color: #004085;
+    }
+    .legend-item {
+      display: inline-block;
+      margin-right: 15px;
+    }
+    .legend-color {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <h2 class="mb-4 text-center">Parking Spot Viewer</h2>
+
+    <!-- Filters -->
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <input type="text" id="searchSpot" class="form-control" placeholder="Search spot (e.g., A1)">
+      </div>
+      <div class="col-md-4">
+        <select id="filterStatus" class="form-select">
+          <option value="all">All Statuses</option>
+          <option value="available">Available</option>
+          <option value="occupied">Occupied</option>
+          <option value="reserved">Reserved</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="mb-4">
+      <span class="legend-item"><span class="legend-color" style="background-color: #d4edda;"></span> Available</span>
+      <span class="legend-item"><span class="legend-color" style="background-color: #f8d7da;"></span> Occupied</span>
+      <span class="legend-item"><span class="legend-color" style="background-color: #cce5ff;"></span> Reserved</span>
+    </div>
+
+    <!-- Parking Grid -->
+    <div class="d-flex flex-wrap" id="parkingGrid"></div>
+
+    <!-- Spot Detail Modal -->
+    <div class="modal fade" id="spotModal" tabindex="-1" aria-labelledby="spotModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="spotModalLabel">Spot Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p><strong>Spot ID:</strong> <span id="modalSpotId"></span></p>
+            <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+            <p><strong>Vehicle Type:</strong> <span id="modalType"></span></p>
+            <p><strong>Floor:</strong> <span id="modalFloor"></span></p>
+            <p><strong>Zone:</strong> <span id="modalZone"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const spots = [
+      { id: 'A1', status: 'available', vehicle_type: '2-wheeler', floor: 1, zone: 'North' },
+      { id: 'A2', status: 'occupied', vehicle_type: '4-wheeler', floor: 1, zone: 'North' },
+      { id: 'A3', status: 'reserved', vehicle_type: '2-wheeler', floor: 1, zone: 'North' },
+      { id: 'B1', status: 'available', vehicle_type: 'EV', floor: 1, zone: 'East' },
+      { id: 'B2', status: 'occupied', vehicle_type: '4-wheeler', floor: 1, zone: 'East' },
+      { id: 'C1', status: 'reserved', vehicle_type: '2-wheeler', floor: 1, zone: 'West' },
+    ];
+
+    const grid = document.getElementById('parkingGrid');
+
+    function renderGrid() {
+      const search = document.getElementById('searchSpot').value.toUpperCase();
+      const filter = document.getElementById('filterStatus').value;
+      grid.innerHTML = '';
+
+      spots.forEach(spot => {
+        if ((filter === 'all' || spot.status === filter) && (spot.id.includes(search))) {
+          const div = document.createElement('div');
+          div.className = `spot ${spot.status}`;
+          div.textContent = spot.id;
+          div.onclick = () => showDetails(spot);
+          grid.appendChild(div);
+        }
+      });
+    }
+
+    function showDetails(spot) {
+      document.getElementById('modalSpotId').textContent = spot.id;
+      document.getElementById('modalStatus').textContent = spot.status;
+      document.getElementById('modalType').textContent = spot.vehicle_type;
+      document.getElementById('modalFloor').textContent = spot.floor;
+      document.getElementById('modalZone').textContent = spot.zone;
+      const modal = new bootstrap.Modal(document.getElementById('spotModal'));
+      modal.show();
+    }
+
+    document.getElementById('searchSpot').addEventListener('input', renderGrid);
+    document.getElementById('filterStatus').addEventListener('change', renderGrid);
+
+    renderGrid();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

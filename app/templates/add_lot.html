@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Parking Lot - Vehicle Parking App</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      background: linear-gradient(to right, #e0eafc, #cfdef3);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .main-container {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      padding: 0.8rem 1rem;
+    }
+
+    .form-section {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      padding: 2rem;
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .form-card h2 {
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: #333;
+    }
+
+    .form-control::placeholder {
+      color: #999;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #007bff, #0056b3);
+      border: none;
+    }
+
+    .alert {
+      margin-top: 1rem;
+    }
+
+    @media (max-height: 680px) {
+      .form-section {
+        align-items: flex-start;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        overflow-y: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="main-container">
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid justify-content-between">
+      <a class="navbar-brand fw-bold" href="/admin">🚗 Vehicle Parking</a>
+      <a href="/logout" class="btn btn-outline-light">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Centered Form Section -->
+  <div class="form-section">
+    <div class="form-card">
+      <h2>Add New Parking Lot</h2>
+      <form method="POST">
+        <div class="mb-3">
+          <label class="form-label">Lot Name</label>
+          <input name="name" class="form-control" placeholder="Enter lot name" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Address</label>
+          <input name="address" class="form-control" placeholder="Enter address" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Pincode</label>
+          <input name="pincode" class="form-control" placeholder="Enter pincode" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Price per Hour (₹)</label>
+          <input name="price" type="number" step="0.01" class="form-control" placeholder="e.g. 20.00" required />
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Maximum Spots</label>
+          <input name="max_spots" type="number" class="form-control" placeholder="e.g. 50" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">➕ Add Lot</button>
+      </form>
+
+      
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
